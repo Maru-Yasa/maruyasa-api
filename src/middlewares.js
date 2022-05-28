@@ -1,3 +1,4 @@
+const { ValidationError } = require('express-validation');
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
@@ -10,6 +11,10 @@ function notFound(req, res, next) {
 /* eslint-disable no-unused-vars */
 function errorHandler(err, req, res, next) {
   /* eslint-enable no-unused-vars */
+  if (err instanceof ValidationError) {
+    return res.status(err.statusCode).json(err)
+  }
+  
   const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
   res.status(statusCode);
   res.json({
